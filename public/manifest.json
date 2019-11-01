@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "IOTA RFID",
+  "name": "IOTA RFID Paiement Terminal",
   "icons": [
     {
       "src": "favicon.ico",

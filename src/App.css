@@ -1,14 +1,22 @@
-.App {
-  text-align: center;
-}
+
 
 .App-logo {
-  height: 40vmin;
+  height: 50px;
+  margin: 8px;
 }
 
 .App-header {
+  background-color: hsl(220, 13%, 18%);
+  color: white;
+}
+.App-header .modal-content {
+  color: hsl(220, 13%, 18%);
+}
+
+.MainForm {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 92vh;
+  min-width: 98vw;
   display: flex;
   flex-direction: column;
   align-items: center;
