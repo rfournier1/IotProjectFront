@@ -2,6 +2,7 @@ import React from 'react';
 import M from "materialize-css";
 import logo from '../logo.svg';
 import conf from '../conf.json';
+import axios from 'axios'
 
 class MainComponent extends React.Component{
     constructor(props, context){
@@ -13,11 +14,13 @@ class MainComponent extends React.Component{
             address:"",
             bufferUuid:"",
             password: conf.password,
-            bufferPassword:""
+            bufferPassword:"",
+            response:""
         };
         this.Tooltip=[];
         this.handleChange = this.handleChange.bind(this);
         this.saveUuid = this.saveUuid.bind(this);
+        this.sendTransaction = this.sendTransaction.bind(this);
         
     }
     componentDidMount(){
@@ -34,6 +37,7 @@ class MainComponent extends React.Component{
         };
         M.Modal.init(this.Modal, options);
         M.Modal.init(this.PasswdModal, options);
+        
         this.Tooltip.forEach(element => {
             M.Tooltip.init(element, {});
         });
@@ -46,21 +50,51 @@ class MainComponent extends React.Component{
             this.setState({"uuid": this.state.bufferUuid});
             this.setState({"bufferUuid": ""});
             this.setState({"bufferPassword": ""});
-            const fs = require('fs');
+            /*const fs = require('fs');
             fs.readFile('../conf.json', 'utf8', function (err,data) {
                 if (err) {
                     return console.log(err);
-                }
+                }*/
             /*var result = data.replace(/string to be replaced/g, 'replacement');
 
             fs.writeFile('../conf.json', result, 'utf8', function (err) {
                 if (err) return console.log(err);
             });*/
-                console.log(data)
-            });
+               
+            
         }else{
             this.setState({"bufferPassword": ""});
         }
+    }
+    sendTransaction(){
+        const options = {
+            onOpenEnd: () => {
+                this.setState({"bufferPassword": ""});
+            },
+            inDuration: 250,
+            outDuration: 250,
+            opacity: 0.5,
+            dismissible: true,
+            startingTop: "4%",
+            endingTop: "10%"
+        };
+        var bodyFormData = new FormData();
+        bodyFormData.append('tag', this.state.address);
+        bodyFormData.append('reciever', this.state.uuid);
+        bodyFormData.append('amount', this.state.amount);
+        axios({
+            method : 'post',
+            url: 'http://127.0.0.1:8000/app/send',
+            data: bodyFormData
+        }).then(response => {
+            this.setState({'response':response});
+            var instance = M.Modal.init(this.ConfirmModal, options);
+            instance.open();
+        }).catch(e => {
+            this.setState({'response':e});
+            var instance = M.Modal.init(this.ConfirmModal, options);
+            instance.open();
+        });
     }
 
     
@@ -115,6 +149,16 @@ class MainComponent extends React.Component{
                                 <button className="modal-close waves-effect waves-green btn-flat" onClick={this.saveUuid}>Confirm</button>
                             </div>
                         </div>
+                        <div ref={ConfirmModal => {this.ConfirmModal = ConfirmModal;}} id="modal3" className="modal">
+                            <div className="modal-content">
+                                <h4>Transaction complete</h4>
+                                <span>You can check the result on the Tangle explorer :</span>
+                                <blockquote><a href={"https://devnet.thetangle.org/address/"+this.state.uuid,"_blank)"} >Check Transaction</a></blockquote>
+                            </div>
+                            <div className="modal-footer">
+                                <button className="modal-close waves-effect waves-green btn-flat">ok</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -127,13 +171,14 @@ class MainComponent extends React.Component{
                                     
 
                                 <input name="amount" value={this.state.amount} onChange={this.handleChange}></input>
-                                <input name="address" value={this.state.address} onChange={this.handleChange}></input>
+                                <input name="address" type="password" value={this.state.address} onChange={this.handleChange}></input>
                                 
-                                <button className="waves-effect waves-light btn " ref={Tooltip2 => {this.Tooltip.push(Tooltip2);}}
-                                data-position="right"  data-tooltip="Click to confirm transaction" type="submit" name="action">
+                                
+                            </form>
+                            <button className="waves-effect waves-light btn " ref={Tooltip2 => {this.Tooltip.push(Tooltip2);}}
+                                    data-position="right"  data-tooltip="Click to confirm transaction" onClick={this.sendTransaction}>
                                     send <i className="material-icons right">import_export</i>
                                 </button>
-                            </form>
                         </div>
                     </div>
                 </div>
