@@ -2,7 +2,8 @@ import React from 'react';
 import M from "materialize-css";
 import logo from '../logo.svg';
 import conf from '../conf.json';
-import axios from 'axios'
+import axios from 'axios';
+//import {exec} from 'child-process-promise'
 
 class MainComponent extends React.Component{
     constructor(props, context){
@@ -15,12 +16,14 @@ class MainComponent extends React.Component{
             bufferUuid:"",
             password: conf.password,
             bufferPassword:"",
-            response:""
+            response:"",
+            serverAddress: conf.serverAddress
         };
         this.Tooltip=[];
         this.handleChange = this.handleChange.bind(this);
         this.saveUuid = this.saveUuid.bind(this);
         this.sendTransaction = this.sendTransaction.bind(this);
+        this.readtag = this.readtag.bind(this);
         
     }
     componentDidMount(){
@@ -84,7 +87,7 @@ class MainComponent extends React.Component{
         bodyFormData.append('amount', this.state.amount);
         axios({
             method : 'post',
-            url: 'http://127.0.0.1:8000/app/send',
+            url: this.state.serverAddress+'/app/send',
             data: bodyFormData
         }).then(response => {
             this.setState({'response':response});
@@ -95,6 +98,17 @@ class MainComponent extends React.Component{
             var instance = M.Modal.init(this.ConfirmModal, options);
             instance.open();
         });
+    }
+    readtag(){
+        /*exec("echo FF CA 00 00 00 | scriptor")
+        .then((data) =>{
+            var tab=data.split("<");
+            if(tab.length>1){
+                var cardid= tab[1].split(":")[0].split(" ").join()
+                this.setState({"address" : cardid});
+            }
+        })
+        .catch(err => console.log(err))*/
     }
 
     
@@ -171,14 +185,21 @@ class MainComponent extends React.Component{
                                     
 
                                 <input name="amount" value={this.state.amount} onChange={this.handleChange}></input>
-                                <input name="address" type="password" value={this.state.address} onChange={this.handleChange}></input>
+                                <input name="address" disabled type="password" value={this.state.address} onChange={this.handleChange}></input>
                                 
                                 
                             </form>
+                            <div>
+                            <button className="waves-effect waves-light btn "onClick={this.readtag}>
+                                    Read card
+                            </button>
+                            </div>
+                            <div>
                             <button className="waves-effect waves-light btn " ref={Tooltip2 => {this.Tooltip.push(Tooltip2);}}
                                     data-position="right"  data-tooltip="Click to confirm transaction" onClick={this.sendTransaction}>
                                     send <i className="material-icons right">import_export</i>
-                                </button>
+                                </button></div>                                
+
                         </div>
                     </div>
                 </div>

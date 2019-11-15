@@ -20,8 +20,6 @@ function createWindow () {
   // and load the index.html of the app.
   win.loadURL('http://localhost:3000');
 
-  // Ouvre les DevTools.
-  win.webContents.openDevTools()
 
   // Émit lorsque la fenêtre est fermée.
   win.on('closed', () => {

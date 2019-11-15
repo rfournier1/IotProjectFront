@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.0",
+    "child-process-promise": "^2.2.1",
     "materialize-css": "^1.0.0-rc.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "spawn-sync": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
