@@ -167,7 +167,7 @@ class MainComponent extends React.Component{
                             <div className="modal-content">
                                 <h4>Transaction complete</h4>
                                 <span>You can check the result on the Tangle explorer :</span>
-                                <blockquote><a href={"https://devnet.thetangle.org/address/"+this.state.uuid,"_blank)"} >Check Transaction</a></blockquote>
+                                <blockquote><a href={"https://devnet.thetangle.org/address/"+this.state.uuid} >Check Transaction</a></blockquote>
                             </div>
                             <div className="modal-footer">
                                 <button className="modal-close waves-effect waves-green btn-flat">ok</button>
